@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  nest:
+    image: mmayss/rssism_server:master
+    container_name: rssism_nest
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - "127.0.0.1:3002:3000"
+
+  web:
+    image: mmayss/rssism_web:master
+    container_name: rssism_web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4201:80"
+    depends_on:
+      - nest
