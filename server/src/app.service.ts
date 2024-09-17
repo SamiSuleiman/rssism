@@ -3,7 +3,8 @@ import parse from 'node-html-parser';
 
 @Injectable()
 export class AppService {
-  async getRssUrl(url: string) {
+  async getRssUrl(url: string): Promise<string | null> {
+    if (!URL.canParse(url)) return null;
     const _url = new URL(url);
     const _rssUrl =
       this.constructRedditRssUrl(_url) || (await this.getFromHtml(url));
@@ -11,7 +12,8 @@ export class AppService {
   }
 
   private constructRedditRssUrl(url: URL): string | null {
-    if (!url.hostname.includes('reddit.com')) return null;
+    if (!url.hostname.includes('reddit.com') || url.pathname.endsWith('.rss'))
+      return null;
     if (
       url.pathname.startsWith('/r/') ||
       url.pathname.startsWith('/user/') ||
